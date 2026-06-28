@@ -14,7 +14,13 @@ import { globalIncidentsRouter } from './routes/globalIncidents'
 const app = express()
 const PORT = process.env.PORT || 4000
 
-app.use(cors({ origin: process.env.WEB_URL || 'http://localhost:3000' }))
+app.use(cors({
+    origin: [
+        process.env.WEB_URL || 'http://localhost:3000',
+        'http://localhost:3000',
+    ],
+    credentials: true,
+}))
 app.use(express.json())
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }))
