@@ -1,18 +1,20 @@
-import jwt from 'jsonwebtoken'
+import jwt, { SignOptions } from 'jsonwebtoken'
 
 const ACCESS_SECRET = process.env.JWT_SECRET!
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!
 
 export function signAccessToken(userId: string) {
-    return jwt.sign({ userId }, ACCESS_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN || '15m'
-    })
+    const options: SignOptions = {
+        expiresIn: '15m'
+    }
+    return jwt.sign({ userId }, ACCESS_SECRET, options)
 }
 
 export function signRefreshToken(userId: string) {
-    return jwt.sign({ userId }, REFRESH_SECRET, {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d'
-    })
+    const options: SignOptions = {
+        expiresIn: '7d'
+    }
+    return jwt.sign({ userId }, REFRESH_SECRET, options)
 }
 
 export function verifyAccessToken(token: string): { userId: string } {
