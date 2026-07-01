@@ -63,10 +63,18 @@ export const alertChannelsApi = {
 
     attach: (monitorId: string, alertChannelId: string) =>
         api.post(`/alert-channels/monitors/${monitorId}/alert-channels`, { alertChannelId }).then(r => r.data),
+
+    detach: (monitorId: string, alertChannelId: string) =>
+        api.delete(`/alert-channels/monitors/${monitorId}/alert-channels/${alertChannelId}`).then(r => r.data),
+
+    attachedChannels: (monitorId: string) =>
+        api.get(`/alert-channels/monitors/${monitorId}/alert-channels`).then(r => r.data as string[]),
 }
 
 export const userApi = {
     me: () => api.get('/user/me').then(r => r.data),
     update: (data: { name?: string; email?: string }) =>
         api.patch('/user/me', data).then(r => r.data),
+    changePassword: (data: { currentPassword: string; newPassword: string }) =>
+        api.patch('/user/me/password', data).then(r => r.data),
 }

@@ -1,34 +1,51 @@
-'use client'
+﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { alertChannelsApi } from '@/lib/queries'
+import { alertChannelsApi, userApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
 
 export default function SettingsPage() {
     const queryClient = useQueryClient()
-    const [form, setForm] = useState({ name: '', email: '' })
-    const [showForm, setShowForm] = useState(false)
+
+    // Alert channel form
+    const [channelForm, setChannelForm] = useState({ name: '', email: '' })
+    const [showChannelForm, setShowChannelForm] = useState(false)
+    const [cooldowns, setCooldowns] = useState<Record<string, number>>({})
+    const [, forceUpdate] = useState(0)
+
+    // Password form
+    const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+    const [pwError, setPwError] = useState('')
+    const [pwSuccess, setPwSuccess] = useState(false)
+
+    // Tick every second while any cooldown is active
+    useEffect(() => {
+        const hasActive = Object.values(cooldowns).some(exp => exp > Date.now())
+        if (!hasActive) return
+        const id = setInterval(() => forceUpdate(n => n + 1), 1000)
+        return () => clearInterval(id)
+    }, [cooldowns])
 
     const { data: channels = [] } = useQuery({
         queryKey: ['alert-channels'],
         queryFn: alertChannelsApi.list,
     })
 
-    const createMutation = useMutation({
+    const createChannelMutation = useMutation({
         mutationFn: () => alertChannelsApi.create({
             type: 'email',
-            name: form.name,
-            config: { email: form.email },
+            name: channelForm.name,
+            config: { email: channelForm.email },
         }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['alert-channels'] })
-            setShowForm(false)
-            setForm({ name: '', email: '' })
+            setShowChannelForm(false)
+            setChannelForm({ name: '', email: '' })
         },
     })
 
-    const deleteMutation = useMutation({
+    const deleteChannelMutation = useMutation({
         mutationFn: alertChannelsApi.delete,
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['alert-channels'] }),
     })
@@ -37,59 +54,150 @@ export default function SettingsPage() {
         mutationFn: alertChannelsApi.test,
     })
 
+    const changePasswordMutation = useMutation({
+        mutationFn: () => userApi.changePassword({
+            currentPassword: pwForm.currentPassword,
+            newPassword: pwForm.newPassword,
+        }),
+        onSuccess: () => {
+            setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+            setPwError('')
+            setPwSuccess(true)
+            setTimeout(() => setPwSuccess(false), 3000)
+        },
+        onError: (err: any) => {
+            setPwError(err.response?.data?.error || 'Failed to update password')
+        },
+    })
+
+    function handlePasswordSubmit() {
+        setPwError('')
+        if (pwForm.newPassword !== pwForm.confirmPassword) {
+            setPwError('New passwords do not match')
+            return
+        }
+        changePasswordMutation.mutate()
+    }
+
+    function handleSendTest(channelId: string) {
+        testMutation.mutate(channelId)
+        setCooldowns(c => ({ ...c, [channelId]: Date.now() + 30_000 }))
+    }
+
+    const inputClass = 'w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors'
+
     return (
         <DashboardLayout>
             <div className="space-y-6 max-w-2xl">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
-                    <p className="text-gray-500 text-sm mt-1">Manage your alert channels</p>
+                    <h1 className="text-2xl font-semibold text-white">Settings</h1>
+                    <p className="text-white/40 text-sm mt-1">Manage your password and alert channels</p>
                 </div>
 
-                <div className="bg-white rounded-xl border border-gray-200">
-                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                        <h2 className="font-medium text-gray-900">Alert channels</h2>
+                {/* Password */}
+                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
+                    <div className="px-6 py-4 border-b border-white/10">
+                        <h2 className="font-medium text-white">Change password</h2>
+                    </div>
+                    <div className="px-6 py-5 space-y-4">
+                        {pwError && (
+                            <div className="p-3 rounded-lg bg-red-500/10 border border-red-400/20 text-red-400 text-sm">
+                                {pwError}
+                            </div>
+                        )}
+                        <div>
+                            <label className="block text-sm font-medium text-white/60 mb-1.5">Current password</label>
+                            <input
+                                type="password"
+                                value={pwForm.currentPassword}
+                                onChange={e => setPwForm(f => ({ ...f, currentPassword: e.target.value }))}
+                                className={inputClass}
+                                autoComplete="current-password"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-1.5">New password</label>
+                                <input
+                                    type="password"
+                                    value={pwForm.newPassword}
+                                    onChange={e => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
+                                    className={inputClass}
+                                    minLength={8}
+                                    autoComplete="new-password"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-white/60 mb-1.5">Confirm new password</label>
+                                <input
+                                    type="password"
+                                    value={pwForm.confirmPassword}
+                                    onChange={e => setPwForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                                    className={inputClass}
+                                    autoComplete="new-password"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={handlePasswordSubmit}
+                                disabled={changePasswordMutation.isPending}
+                                className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
+                            >
+                                {changePasswordMutation.isPending ? 'Updating...' : 'Update password'}
+                            </button>
+                            {pwSuccess && <span className="text-sm text-emerald-400">Password updated</span>}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Alert channels */}
+                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
+                    <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+                        <h2 className="font-medium text-white">Alert channels</h2>
                         <button
-                            onClick={() => setShowForm(true)}
-                            className="text-sm text-blue-600 hover:underline"
+                            onClick={() => setShowChannelForm(true)}
+                            className="px-3 py-1.5 bg-[#2EDB8F] text-white rounded-lg text-xs font-medium hover:bg-[#52E8A5] transition-colors"
                         >
-                            Add channel
+                            + Add channel
                         </button>
                     </div>
 
-                    {showForm && (
-                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                    {showChannelForm && (
+                        <div className="px-6 py-5 border-b border-white/10">
                             <div className="space-y-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <label className="block text-sm font-medium text-white/60 mb-1.5">Name</label>
                                     <input
                                         type="text"
-                                        value={form.name}
-                                        onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={channelForm.name}
+                                        onChange={e => setChannelForm(f => ({ ...f, name: e.target.value }))}
+                                        className={inputClass}
                                         placeholder="My email alerts"
+                                        maxLength={100}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                                    <label className="block text-sm font-medium text-white/60 mb-1.5">Email address</label>
                                     <input
                                         type="email"
-                                        value={form.email}
-                                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={channelForm.email}
+                                        onChange={e => setChannelForm(f => ({ ...f, email: e.target.value }))}
+                                        className={inputClass}
                                         placeholder="alerts@example.com"
                                     />
                                 </div>
-                                <div className="flex gap-3">
+                                <div className="flex gap-3 pt-1">
                                     <button
-                                        onClick={() => createMutation.mutate()}
-                                        disabled={createMutation.isPending}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                                        onClick={() => createChannelMutation.mutate()}
+                                        disabled={createChannelMutation.isPending}
+                                        className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
                                     >
-                                        {createMutation.isPending ? 'Saving...' : 'Save'}
+                                        {createChannelMutation.isPending ? 'Saving...' : 'Save'}
                                     </button>
                                     <button
-                                        onClick={() => setShowForm(false)}
-                                        className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                                        onClick={() => setShowChannelForm(false)}
+                                        className="px-4 py-2 border border-white/15 text-white/60 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors"
                                     >
                                         Cancel
                                     </button>
@@ -98,35 +206,46 @@ export default function SettingsPage() {
                         </div>
                     )}
 
-                    <div className="divide-y divide-gray-100">
-                        {channels.length === 0 && !showForm ? (
-                            <div className="px-6 py-8 text-center text-sm text-gray-500">
+                    <div className="divide-y divide-white/10">
+                        {channels.length === 0 && !showChannelForm ? (
+                            <div className="px-6 py-8 text-center text-sm text-white/30">
                                 No alert channels yet
                             </div>
                         ) : (
-                            channels.map((channel: any) => (
-                                <div key={channel.id} className="flex items-center justify-between px-6 py-4">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900">{channel.name}</p>
-                                        <p className="text-xs text-gray-400 mt-0.5">{channel.config.email}</p>
+                            channels.map((channel: any) => {
+                                const cooldownMs = (cooldowns[channel.id] ?? 0) - Date.now()
+                                const isCoolingDown = cooldownMs > 0
+                                const secondsLeft = isCoolingDown ? Math.ceil(cooldownMs / 1000) : 0
+                                const isTestDisabled = testMutation.isPending || isCoolingDown
+
+                                return (
+                                    <div key={channel.id} className="flex items-center justify-between px-6 py-4">
+                                        <div>
+                                            <p className="text-sm font-medium text-white">{channel.name}</p>
+                                            <p className="text-xs text-white/30 mt-0.5">{channel.config.email}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => handleSendTest(channel.id)}
+                                                disabled={isTestDisabled}
+                                                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-[#2EDB8F]/40 text-[#2EDB8F] hover:bg-[#2EDB8F]/10 hover:border-[#52E8A5] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                            >
+                                                {testMutation.isPending
+                                                    ? 'Sending...'
+                                                    : isCoolingDown
+                                                        ? `Wait ${secondsLeft}s`
+                                                        : 'Send test'}
+                                            </button>
+                                            <button
+                                                onClick={() => deleteChannelMutation.mutate(channel.id)}
+                                                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-red-500/30 text-red-400/70 hover:bg-red-500/10 hover:border-red-400/60 hover:text-red-400 transition-all"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => testMutation.mutate(channel.id)}
-                                            disabled={testMutation.isPending}
-                                            className="text-xs text-blue-600 hover:underline disabled:opacity-50"
-                                        >
-                                            {testMutation.isPending ? 'Sending...' : 'Send test'}
-                                        </button>
-                                        <button
-                                            onClick={() => deleteMutation.mutate(channel.id)}
-                                            className="text-xs text-red-500 hover:text-red-700 transition-colors"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
+                                )
+                            })
                         )}
                     </div>
                 </div>

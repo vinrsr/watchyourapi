@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -30,64 +30,77 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 p-8">
-                <h1 className="text-2xl font-semibold text-gray-900 mb-2">Create an account</h1>
-                <p className="text-gray-500 text-sm mb-8">Start monitoring your APIs for free</p>
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden flex items-center justify-center">
 
-                {error && (
-                    <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-                        {error}
-                    </div>
-                )}
+            {/* Background glow orbs */}
+            <div className="absolute top-[-100px] left-1/3 w-[500px] h-[500px] bg-[#2EDB8F]/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#2EDB8F]/15 rounded-full blur-3xl pointer-events-none" />
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input
-                            type="text"
-                            value={form.name}
-                            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Your name"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input
-                            type="email"
-                            value={form.email}
-                            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="you@example.com"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input
-                            type="password"
-                            value={form.password}
-                            onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Min. 8 characters"
-                            required
-                            minLength={8}
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                    >
-                        {loading ? 'Creating account...' : 'Create account'}
-                    </button>
-                </form>
+            <div className="w-full max-w-md relative z-10 px-4">
+                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8">
+                    <h1 className="text-2xl font-semibold text-white mb-1">Create an account</h1>
+                    <p className="text-white/40 text-sm mb-8">Start monitoring your APIs for free</p>
 
-                <p className="mt-6 text-center text-sm text-gray-500">
-                    Already have an account?{' '}
-                    <Link href="/login" className="text-blue-600 hover:underline">Sign in</Link>
+                    {error && (
+                        <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-400/20 text-red-400 text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-white/60 mb-1.5">Name</label>
+                            <input
+                                type="text"
+                                value={form.name}
+                                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
+                                placeholder="Your name"
+                                autoComplete="name"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-white/60 mb-1.5">Email</label>
+                            <input
+                                type="email"
+                                value={form.email}
+                                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
+                                placeholder="you@example.com"
+                                autoComplete="email"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-white/60 mb-1.5">Password</label>
+                            <input
+                                type="password"
+                                value={form.password}
+                                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
+                                placeholder="Min. 8 characters"
+                                autoComplete="new-password"
+                                required
+                                minLength={8}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2 px-4 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors mt-2"
+                        >
+                            {loading ? 'Creating account...' : 'Create account'}
+                        </button>
+                    </form>
+
+                    <p className="mt-6 text-center text-sm text-white/40">
+                        Already have an account?{' '}
+                        <Link href="/login" className="text-[#2EDB8F] hover:text-[#7DF0BC] transition-colors">Sign in</Link>
+                    </p>
+                </div>
+                <p className="mt-4 text-center text-sm text-white/30">
+                    <Link href="/" className="hover:text-white/60 transition-colors">Back to home</Link>
                 </p>
             </div>
         </div>

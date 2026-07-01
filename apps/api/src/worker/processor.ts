@@ -17,7 +17,7 @@ export async function processMonitorCheck(monitorId: string) {
         }
     })
 
-    if (!monitor || monitor.status !== 'active') return
+    if (!monitor || monitor.status === 'paused') return
 
     const startTime = Date.now()
     let statusCode: number | null = null

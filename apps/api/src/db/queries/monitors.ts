@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, desc } from 'drizzle-orm'
 import { db } from '../index'
 import { monitors } from '../schema'
 
@@ -19,7 +19,7 @@ export async function createMonitor(
 export async function findMonitorsByUserId(userId: string) {
     return db.select().from(monitors)
         .where(eq(monitors.userId, userId))
-        .orderBy(monitors.createdAt)
+        .orderBy(desc(monitors.createdAt))
 }
 
 export async function findMonitorById(id: string, userId: string) {

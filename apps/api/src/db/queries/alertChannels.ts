@@ -29,6 +29,13 @@ export async function attachAlertChannel(monitorId: string, alertChannelId: stri
     return result[0]
 }
 
+export async function findAttachedChannelIdsByMonitorId(monitorId: string) {
+    const rows = await db.select({ alertChannelId: monitorAlertChannels.alertChannelId })
+        .from(monitorAlertChannels)
+        .where(eq(monitorAlertChannels.monitorId, monitorId))
+    return rows.map(r => r.alertChannelId)
+}
+
 export async function detachAlertChannel(monitorId: string, alertChannelId: string) {
     const result = await db.delete(monitorAlertChannels)
         .where(

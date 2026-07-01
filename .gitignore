@@ -6,3 +6,4 @@ dist
 .env.production
 *.log
 .turbo
+secret-note

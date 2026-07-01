@@ -6,7 +6,14 @@ function getConnection() {
     const url = process.env.REDIS_URL
     console.log('Redis URL:', url?.slice(0, 30))
     if (url) {
-        return { url, tls: {} }
+        const parsed = new URL(url)
+        return {
+            host: parsed.hostname,
+            port: parseInt(parsed.port),
+            username: parsed.username,
+            password: parsed.password,
+            tls: url.startsWith('rediss://') ? {} : undefined,
+        }
     }
     return {
         host: process.env.REDIS_HOST || 'localhost',

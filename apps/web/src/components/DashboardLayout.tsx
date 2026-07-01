@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
@@ -26,42 +26,49 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const navItems = [
         { href: '/dashboard', label: 'Overview' },
         { href: '/monitors', label: 'Monitors' },
+        { href: '/incidents', label: 'Incidents' },
         { href: '/settings', label: 'Settings' },
     ]
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white border-b border-gray-200">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+            {/* Fixed background orbs */}
+            <div className="fixed top-[-100px] left-1/3 w-[600px] h-[600px] bg-[#2EDB8F]/20 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="fixed top-1/2 right-[-100px] w-96 h-96 bg-[#2EDB8F]/15 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="fixed bottom-0 left-[-50px] w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none z-0" />
+
+            <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-900/60 backdrop-blur-md">
                 <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-8">
-                        <span className="font-semibold text-gray-900">WatchYourAPI</span>
+                        <span className="font-semibold text-[#2EDB8F]">WatchYourAPI</span>
                         <div className="flex items-center gap-1">
                             {navItems.map(item => (
                                 <Link
                                     key={item.href}
                                     href={item.href}
                                     className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${pathname === item.href
-                                        ? 'bg-gray-100 text-gray-900 font-medium'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
-                                        }`}
+                                        ? 'bg-white/10 text-white font-medium'
+                                        : 'text-white/50 hover:text-white hover:bg-white/5'
+                                    }`}
                                 >
                                     {item.label}
                                 </Link>
                             ))}
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-500">{user?.email}</span>
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm text-white/40">{user?.email}</span>
                         <button
                             onClick={handleLogout}
-                            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                            className="text-sm text-white/50 hover:text-white transition-colors"
                         >
                             Sign out
                         </button>
                     </div>
                 </div>
             </nav>
-            <main className="max-w-6xl mx-auto px-4 py-8">
+
+            <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
                 {children}
             </main>
         </div>

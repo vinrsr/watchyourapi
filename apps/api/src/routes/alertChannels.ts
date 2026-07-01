@@ -3,13 +3,15 @@ import { z } from 'zod'
 import { authenticate, AuthRequest } from '../middleware/authenticate'
 import {
     findAlertChannelsByUserId,
+    findAttachedChannelIdsByMonitorId,
     createAlertChannel,
     deleteAlertChannel,
     attachAlertChannel,
     detachAlertChannel,
 } from '../db/queries/alertChannels'
-import { findMonitorById } from '../db/queries/monitors'
-import { sendDownAlert } from '../lib/mailer'
+import { findMonitorById, findMonitorsByUserId } from '../db/queries/monitors'
+import { findOpenIncident } from '../db/queries/incidents'
+import { sendTestAlert, sendDownAlert } from '../lib/mailer'
 
 export const alertChannelsRouter = Router()
 
@@ -61,12 +63,31 @@ alertChannelsRouter.post('/:id/test', async (req: AuthRequest, res: Response) =>
         if (!channel) { res.status(404).json({ error: 'Alert channel not found' }); return }
 
         if (channel.type === 'email') {
-            await sendDownAlert((channel.config as any).email, 'Test Monitor', 'https://example.com', 'This is a test alert')
+            const monitors = await findMonitorsByUserId(req.userId!)
+            const first = monitors[0]
+            await sendTestAlert(
+                (channel.config as any).email,
+                channel.name,
+                first?.name,
+                first?.url,
+            )
         }
 
         res.json({ message: 'Test alert sent' })
     } catch {
         res.status(500).json({ error: 'Failed to send test alert' })
+    }
+})
+
+alertChannelsRouter.get('/monitors/:monitorId/alert-channels', async (req: AuthRequest, res: Response) => {
+    try {
+        const monitor = await findMonitorById(req.params.monitorId, req.userId!)
+        if (!monitor) { res.status(404).json({ error: 'Monitor not found' }); return }
+
+        const ids = await findAttachedChannelIdsByMonitorId(req.params.monitorId)
+        res.json(ids)
+    } catch {
+        res.status(500).json({ error: 'Failed to fetch attached channels' })
     }
 })
 
@@ -79,6 +100,22 @@ alertChannelsRouter.post('/monitors/:monitorId/alert-channels', async (req: Auth
         if (!monitor) { res.status(404).json({ error: 'Monitor not found' }); return }
 
         const result = await attachAlertChannel(req.params.monitorId, alertChannelId)
+
+        // If the monitor is currently down, immediately alert the newly attached channel
+        const openIncident = await findOpenIncident(req.params.monitorId)
+        if (openIncident) {
+            const channels = await findAlertChannelsByUserId(req.userId!)
+            const channel = channels.find(c => c.id === alertChannelId)
+            if (channel?.type === 'email') {
+                await sendDownAlert(
+                    (channel.config as any).email,
+                    monitor.name,
+                    monitor.url,
+                    openIncident.cause || 'Unknown error',
+                ).catch(() => {}) // don't fail the attach if email fails
+            }
+        }
+
         res.status(201).json(result)
     } catch {
         res.status(500).json({ error: 'Failed to attach alert channel' })
