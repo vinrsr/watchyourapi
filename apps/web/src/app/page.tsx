@@ -1,4 +1,4 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import Image from 'next/image'
 
 const UPTIME_BLOCKS = Array.from({ length: 90 }, (_, i) =>
@@ -11,12 +11,10 @@ export default function LandingPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden">
 
-            {/* Background glow orbs */}
             <div className="absolute top-[-100px] left-1/3 w-[600px] h-[600px] bg-[#2EDB8F]/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute top-1/2 right-[-100px] w-96 h-96 bg-[#2EDB8F]/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-[-50px] w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Top-right auth links */}
             <div className="absolute top-0 right-0 z-50 px-6 py-5 flex items-center gap-5">
                 <Link href="/login" className="text-sm text-white/50 hover:text-white transition-colors">
                     Sign in
@@ -26,7 +24,6 @@ export default function LandingPage() {
                 </Link>
             </div>
 
-            {/* â”€â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="max-w-5xl mx-auto px-4 pt-20 pb-20 text-center relative z-10">
                 <Image
                     src="/logo.png"
@@ -43,21 +40,19 @@ export default function LandingPage() {
                     Know when your APIs go down before your users do
                 </h1>
                 <p className="text-white/50 mb-10 leading-relaxed max-w-xl mx-auto">
-                    Add your endpoints, set an alert email, and get a dashboard with uptime history, response time trends, and a full incident log â€” plus an email the moment anything goes down.
+                    Add your endpoints, set an alert email, and get a dashboard with uptime history, response time trends, and a full incident log. Get an email the moment anything goes down.
                 </p>
-                <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#52E8A5] transition-colors">
+                <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
                     Start monitoring for free
                 </Link>
             </section>
 
-            {/* â”€â”€â”€ Features â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="max-w-5xl mx-auto px-4 pb-20 relative z-10">
                 <div className="mb-8">
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">Features</p>
                     <h2 className="text-2xl font-semibold text-white">Everything you need to stay on top of your APIs</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                    {/* Uptime */}
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <div className="w-9 h-9 rounded-lg bg-emerald-400/10 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +83,6 @@ export default function LandingPage() {
                         </div>
                     </div>
 
-                    {/* Alerts */}
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <div className="w-9 h-9 rounded-lg bg-[#2EDB8F]/10 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-[#2EDB8F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +91,7 @@ export default function LandingPage() {
                         </div>
                         <h3 className="font-semibold text-white mb-2">Instant Alerts</h3>
                         <p className="text-sm text-white/40 leading-relaxed mb-5">
-                            Get notified by email the moment a monitor goes down. Attach alert channels per monitor so the right person gets paged â€” not everyone.
+                            Get notified by email the moment a monitor goes down. Attach alert channels per monitor so the right person gets paged, not everyone.
                         </p>
                         <div className="flex items-center gap-3">
                             <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3">
@@ -113,7 +107,7 @@ export default function LandingPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                             <div className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3">
-                                <div className="w-7 h-7 rounded-lg bg-violet-400/15 flex items-center justify-center flex-shrink-0">
+                                <div className="w-7 h-7 rounded-lg bg-[#2EDB8F]/10 flex items-center justify-center flex-shrink-0">
                                     <svg className="w-3.5 h-3.5 text-[#2EDB8F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
@@ -126,7 +120,6 @@ export default function LandingPage() {
                         </div>
                     </div>
 
-                    {/* Response times */}
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <div className="w-9 h-9 rounded-lg bg-[#2EDB8F]/10 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-[#2EDB8F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,12 +130,11 @@ export default function LandingPage() {
                         <p className="text-sm text-white/40 leading-relaxed mb-4">Spot latency degradation before it becomes a full outage.</p>
                         <div className="flex items-end gap-px h-12">
                             {LATENCY_BARS.map((h, i) => (
-                                <div key={i} className="flex-1 bg-[#52E8A5]/30 rounded-sm" style={{ height: `${h}%` }} />
+                                <div key={i} className="flex-1 bg-[#2EDB8F]/30 rounded-sm" style={{ height: `${h}%` }} />
                             ))}
                         </div>
                     </div>
 
-                    {/* Incident history */}
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <div className="w-9 h-9 rounded-lg bg-red-400/10 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,12 +142,12 @@ export default function LandingPage() {
                             </svg>
                         </div>
                         <h3 className="font-semibold text-white mb-2">Incident History</h3>
-                        <p className="text-sm text-white/40 leading-relaxed mb-5">Full log of every downtime event â€” when it started, how long it lasted, and when it resolved.</p>
+                        <p className="text-sm text-white/40 leading-relaxed mb-5">Full log of every downtime event. When it started, how long it lasted, and when it resolved.</p>
                         <div className="space-y-2">
                             {[
-                                { dot: 'bg-emerald-400', label: 'Incident resolved', sub: 'Duration recorded Â· Root cause logged' },
-                                { dot: 'bg-emerald-400', label: 'Incident resolved', sub: 'Duration recorded Â· Root cause logged' },
-                                { dot: 'bg-red-400', label: 'Incident ongoing', sub: 'Started tracking Â· Alert sent' },
+                                { dot: 'bg-emerald-400', label: 'Incident resolved', sub: 'Duration recorded - Root cause logged' },
+                                { dot: 'bg-emerald-400', label: 'Incident resolved', sub: 'Duration recorded - Root cause logged' },
+                                { dot: 'bg-red-400', label: 'Incident ongoing', sub: 'Started tracking - Alert sent' },
                             ].map((row, i) => (
                                 <div key={i} className="flex items-center gap-3 py-2 border-b border-white/5 last:border-0">
                                     <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${row.dot}`} />
@@ -170,7 +162,6 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* â”€â”€â”€ Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="max-w-5xl mx-auto px-4 pb-20 relative z-10">
                 <div className="mb-8">
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">How it works</p>
@@ -178,9 +169,9 @@ export default function LandingPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                     {[
-                        { icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'text-amber-400', bg: 'bg-amber-400/10', value: '24/7', label: 'Monitors run continuously â€” no schedules, no gaps' },
+                        { icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'text-amber-400', bg: 'bg-amber-400/10', value: '24/7', label: 'Monitors run continuously, no schedules, no gaps' },
                         { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-blue-400', bg: 'bg-blue-400/10', value: '<1 min', label: 'From a failed check to an alert in your inbox' },
-                        { icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15', color: 'text-emerald-400', bg: 'bg-emerald-400/10', value: '30 sec', label: 'Minimum check interval â€” catch outages fast' },
+                        { icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15', color: 'text-emerald-400', bg: 'bg-emerald-400/10', value: '30 sec', label: 'Minimum check interval to catch outages fast' },
                     ].map(({ icon, color, bg, value, label }) => (
                         <div key={value} className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6 flex flex-col justify-between">
                             <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center`}>
@@ -197,7 +188,6 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* â”€â”€â”€ How it works â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="max-w-5xl mx-auto px-4 pb-20 relative z-10">
                 <div className="mb-8">
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">Get started</p>
@@ -218,18 +208,16 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* â”€â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <section className="max-w-5xl mx-auto px-4 pb-24 relative z-10">
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-16 text-center">
                     <h2 className="text-2xl font-semibold text-white mb-3">Ready to monitor your APIs?</h2>
                     <p className="text-white/40 text-sm mb-8">Create an account and add your first monitor in under a minute.</p>
-                    <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#52E8A5] transition-colors">
+                    <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
                         Get started free
                     </Link>
                 </div>
             </section>
 
-            {/* Footer */}
             <footer className="border-t border-white/10 relative z-10">
                 <div className="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between">
                     <span className="text-sm text-white/20">WatchYourAPI</span>
