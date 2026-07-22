@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: watchyourapi
+      POSTGRES_PASSWORD: watchyourapi
+      POSTGRES_DB: watchyourapi
+    volumes:
+      - watchyourapi_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U watchyourapi" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  watchyourapi-api:
+    build: ./apps/api
+    networks:
+      - default
+      - web
+    env_file:
+      - .env.production
+    expose:
+      - "4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  watchyourapi_pgdata:
+
+networks:
+  web:
+    external: true
