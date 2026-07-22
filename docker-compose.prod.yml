@@ -24,7 +24,9 @@ services:
     restart: unless-stopped
 
   watchyourapi-api:
-    build: ./apps/api
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
     networks:
       - default
       - web
