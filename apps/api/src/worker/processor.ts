@@ -13,7 +13,8 @@ export async function processMonitorCheck(monitorId: string) {
         with: {
             monitorAlertChannels: {
                 with: { alertChannel: true }
-            }
+            },
+            user: true,
         }
     })
 
@@ -78,6 +79,12 @@ async function sendAlerts(
     durationSeconds: number
 ) {
     const channels = monitor.monitorAlertChannels?.map((mac: any) => mac.alertChannel) || []
+
+    // No alert channel attached to this monitor: fall back to the account's login email
+    // so a down event is never silently unreported.
+    if (channels.length === 0 && monitor.user?.email) {
+        channels.push({ type: 'email', config: { email: monitor.user.email } })
+    }
 
     for (const channel of channels) {
         try {

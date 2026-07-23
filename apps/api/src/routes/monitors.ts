@@ -16,12 +16,12 @@ export const monitorsRouter = Router()
 const createSchema = z.object({
     name: z.string().min(1),
     url: z.string().url(),
-    method: z.enum(['GET', 'POST', 'HEAD']).default('GET'),
     intervalSeconds: z.number().min(30).max(86400).default(60),
     timeoutSeconds: z.number().min(5).max(60).default(30),
+    email: z.string().email().optional(),
 })
 
-const updateSchema = createSchema.partial()
+const updateSchema = createSchema.omit({ email: true }).partial()
 
 monitorsRouter.use(authenticate)
 

@@ -5,16 +5,20 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { monitorsApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
+import PageLoading from '@/components/PageLoading'
+import { useAuthStore } from '@/store/auth'
 
 export default function MonitorsPage() {
     const queryClient = useQueryClient()
+    const accountEmail = useAuthStore(s => s.user?.email)
     const [showForm, setShowForm] = useState(false)
+    const [showNoEmailConfirm, setShowNoEmailConfirm] = useState(false)
     const [form, setForm] = useState({
         name: '',
         url: '',
-        method: 'GET',
         intervalSeconds: 60,
         timeoutSeconds: 30,
+        email: '',
     })
     const [editingId, setEditingId] = useState<string | null>(null)
     const [editForm, setEditForm] = useState({ name: '', url: '', intervalSeconds: 60 })
@@ -29,7 +33,7 @@ export default function MonitorsPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['monitors'] })
             setShowForm(false)
-            setForm({ name: '', url: '', method: 'GET', intervalSeconds: 60, timeoutSeconds: 30 })
+            setForm({ name: '', url: '', intervalSeconds: 60, timeoutSeconds: 30, email: '' })
         },
     })
 
@@ -57,15 +61,24 @@ export default function MonitorsPage() {
         },
     })
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    function submitMonitor() {
+        const { email, ...rest } = form
+        createMutation.mutate(email.trim() ? { ...rest, email: email.trim() } : rest)
+    }
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        createMutation.mutate(form)
+        if (!form.email.trim()) {
+            setShowNoEmailConfirm(true)
+            return
+        }
+        submitMonitor()
     }
 
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="text-sm text-white/40">Loading...</div>
+                <PageLoading />
             </DashboardLayout>
         )
     }
@@ -82,7 +95,7 @@ export default function MonitorsPage() {
                     </div>
                     <button
                         onClick={() => setShowForm(true)}
-                        className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] transition-colors"
+                        className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] transition-colors"
                     >
                         Add monitor
                     </button>
@@ -107,26 +120,22 @@ export default function MonitorsPage() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-white/60 mb-1.5">URL</label>
-                                    <input
-                                        type="url"
-                                        value={form.url}
-                                        onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
-                                        className={inputClass}
-                                        placeholder="https://api.example.com/health"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-white/60 mb-1.5">Method</label>
-                                    <select
-                                        value={form.method}
-                                        onChange={e => setForm(f => ({ ...f, method: e.target.value }))}
-                                        className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
-                                    >
-                                        <option>GET</option>
-                                        <option>POST</option>
-                                        <option>HEAD</option>
-                                    </select>
+                                    <div className="flex items-stretch w-full bg-white/5 border border-white/10 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-[#2EDB8F] transition-colors">
+                                        <span
+                                            title="Only GET checks are supported"
+                                            className="flex items-center px-3 bg-white/5 border-r border-white/10 text-xs font-mono font-semibold text-white/40 select-none"
+                                        >
+                                            GET
+                                        </span>
+                                        <input
+                                            type="url"
+                                            value={form.url}
+                                            onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
+                                            className="flex-1 min-w-0 px-3 py-2 bg-transparent text-sm text-white placeholder-white/25 focus:outline-none"
+                                            placeholder="https://api.example.com/health"
+                                            required
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-white/60 mb-1.5">Check every (seconds)</label>
@@ -139,12 +148,22 @@ export default function MonitorsPage() {
                                         max={86400}
                                     />
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-white/60 mb-1.5">Alert email (optional)</label>
+                                    <input
+                                        type="email"
+                                        value={form.email}
+                                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                                        className={inputClass}
+                                        placeholder="you@example.com"
+                                    />
+                                </div>
                             </div>
                             <div className="flex gap-3">
                                 <button
                                     type="submit"
                                     disabled={createMutation.isPending}
-                                    className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
+                                    className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
                                 >
                                     {createMutation.isPending ? 'Creating...' : 'Create monitor'}
                                 </button>
@@ -157,6 +176,38 @@ export default function MonitorsPage() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                )}
+
+                {showNoEmailConfirm && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+                        <div className="max-w-md w-full bg-slate-900 border border-white/10 rounded-2xl p-6 space-y-4">
+                            <h3 className="text-white font-medium">No alert email added</h3>
+                            <p className="text-sm text-white/50">
+                                If this API goes down, we&apos;ll notify your registered account email
+                                {accountEmail ? <> (<span className="text-white/70">{accountEmail}</span>)</> : ''} instead.
+                                You can attach a dedicated alert email anytime from the monitor page. Continue without one?
+                            </p>
+                            <div className="flex gap-3 justify-end">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNoEmailConfirm(false)}
+                                    className="px-4 py-2 border border-white/15 text-white/60 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-white transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowNoEmailConfirm(false)
+                                        submitMonitor()
+                                    }}
+                                    className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] transition-colors"
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
@@ -206,7 +257,7 @@ export default function MonitorsPage() {
                                             <button
                                                 onClick={() => updateMutation.mutate({ id: monitor.id, data: editForm })}
                                                 disabled={updateMutation.isPending}
-                                                className="px-3 py-1.5 bg-[#2EDB8F] text-white rounded-lg text-xs font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
+                                                className="px-3 py-1.5 bg-[#2EDB8F] text-slate-900 rounded-lg text-xs font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
                                             >
                                                 {updateMutation.isPending ? 'Saving...' : 'Save'}
                                             </button>
@@ -221,7 +272,17 @@ export default function MonitorsPage() {
                                 ) : (
                                     <div className="flex items-center justify-between">
                                         <Link href={`/monitors/${monitor.id}`} className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-white">{monitor.name}</p>
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-sm font-medium text-white">{monitor.name}</p>
+                                                {!monitor.hasAlertChannel && (
+                                                    <span
+                                                        title={`No alert email attached — if this API goes down, we'll notify your account email (${accountEmail ?? 'not set'}) instead.`}
+                                                        className="text-xs px-2 py-0.5 rounded-full border border-amber-400/20 bg-amber-400/10 text-amber-400 font-medium flex-shrink-0"
+                                                    >
+                                                        No alert email
+                                                    </span>
+                                                )}
+                                            </div>
                                             <p className="text-xs text-white/30 mt-0.5 truncate">{monitor.url}</p>
                                             <p className="text-xs text-white/25 mt-0.5">Every {monitor.intervalSeconds}s</p>
                                         </Link>

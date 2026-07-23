@@ -5,10 +5,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { monitorsApi, checksApi, incidentsApi, alertChannelsApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
+import PageLoading from '@/components/PageLoading'
+import { useAuthStore } from '@/store/auth'
 
 export default function MonitorDetailPage() {
     const { id } = useParams<{ id: string }>()
     const queryClient = useQueryClient()
+    const accountEmail = useAuthStore(s => s.user?.email)
     const [checksPage, setChecksPage] = useState(1)
 
     const { data: monitor, isLoading } = useQuery({
@@ -58,7 +61,7 @@ export default function MonitorDetailPage() {
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="text-sm text-white/40">Loading...</div>
+                <PageLoading />
             </DashboardLayout>
         )
     }
@@ -85,6 +88,24 @@ export default function MonitorDetailPage() {
                     </div>
                     <StatusBadge status={monitor.status} />
                 </div>
+
+                {attachedIds.length === 0 && (
+                    <div className="relative overflow-hidden rounded-2xl border-l-4 border-amber-400 bg-amber-400/15 px-5 py-4 shadow-lg shadow-amber-500/10">
+                        <div className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-base">
+                                ⚠
+                            </span>
+                            <div>
+                                <p className="text-sm font-semibold text-amber-200">No alert email attached to this monitor</p>
+                                <p className="text-sm text-amber-100/80 mt-1">
+                                    If it goes down, we&apos;ll fall back to notifying your registered account email{' '}
+                                    {accountEmail ? <span className="font-semibold text-white">{accountEmail}</span> : '(not set)'}.
+                                    Attach a dedicated alert email below if you&apos;d like other people notified too.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {stats && (
                     <div className="grid grid-cols-3 gap-4">
@@ -166,7 +187,7 @@ export default function MonitorDetailPage() {
                                                 <button
                                                     onClick={() => attachMutation.mutate({ monitorId: id, alertChannelId: channel.id })}
                                                     disabled={isPending}
-                                                    className="text-xs px-3 py-1.5 bg-[#2EDB8F] text-white rounded-lg hover:bg-[#25C07A] disabled:opacity-50 transition-colors"
+                                                    className="text-xs px-3 py-1.5 bg-[#2EDB8F] text-slate-900 rounded-lg hover:bg-[#25C07A] disabled:opacity-50 transition-colors"
                                                 >
                                                     {isPending ? 'Attaching...' : 'Attach'}
                                                 </button>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { monitorsApi, incidentsApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
+import PageLoading from '@/components/PageLoading'
 
 export default function DashboardPage() {
     const [userId, setUserId] = useState<string | null>(null)
@@ -28,7 +29,7 @@ export default function DashboardPage() {
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="text-sm text-white/40">Loading...</div>
+                <PageLoading />
             </DashboardLayout>
         )
     }
@@ -78,7 +79,17 @@ export default function DashboardPage() {
                                     className="flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-colors"
                                 >
                                     <div>
-                                        <p className="text-sm font-medium text-white">{monitor.name}</p>
+                                        <div className="flex items-center gap-2">
+                                            <p className="text-sm font-medium text-white">{monitor.name}</p>
+                                            {!monitor.hasAlertChannel && (
+                                                <span
+                                                    title="No alert email attached — down alerts will fall back to your account email"
+                                                    className="text-xs px-2 py-0.5 rounded-full border border-amber-400/20 bg-amber-400/10 text-amber-400 font-medium flex-shrink-0"
+                                                >
+                                                    No alert email
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-xs text-white/30 mt-0.5">{monitor.url}</p>
                                     </div>
                                     <StatusBadge status={monitor.status} />

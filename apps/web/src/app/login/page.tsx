@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { authApi } from '@/lib/queries'
 import { useAuthStore } from '@/store/auth'
+import PasswordInput from '@/components/PasswordInput'
 
 function LoginForm() {
     const router = useRouter()
@@ -71,8 +72,7 @@ function LoginForm() {
                                 Forgot password?
                             </Link>
                         </div>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={form.password}
                             onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
@@ -84,7 +84,7 @@ function LoginForm() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2 px-4 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#25C07A] disabled:opacity-50 transition-colors mt-2"
+                        className="w-full py-2 px-4 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#25C07A] disabled:opacity-50 transition-colors mt-2"
                     >
                         {loading ? 'Signing in...' : 'Sign in'}
                     </button>

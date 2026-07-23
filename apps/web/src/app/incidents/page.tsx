@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { incidentsApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
+import PageLoading from '@/components/PageLoading'
 
 export default function IncidentsPage() {
     const { data: incidents = [], isLoading } = useQuery({
@@ -18,7 +19,7 @@ export default function IncidentsPage() {
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="text-sm text-white/40">Loading...</div>
+                <PageLoading />
             </DashboardLayout>
         )
     }

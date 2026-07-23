@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api } from '@/lib/axios'
+import PasswordInput from '@/components/PasswordInput'
 
 function ResetPasswordForm() {
     const router = useRouter()
@@ -60,8 +61,7 @@ function ResetPasswordForm() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-white/60 mb-1.5">New password</label>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={form.newPassword}
                             onChange={e => setForm(f => ({ ...f, newPassword: e.target.value }))}
                             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
@@ -73,8 +73,7 @@ function ResetPasswordForm() {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-white/60 mb-1.5">Confirm new password</label>
-                        <input
-                            type="password"
+                        <PasswordInput
                             value={form.confirmPassword}
                             onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
                             className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#2EDB8F] focus:border-transparent transition-colors"
@@ -86,7 +85,7 @@ function ResetPasswordForm() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2 px-4 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#25C07A] disabled:opacity-50 transition-colors mt-2"
+                        className="w-full py-2 px-4 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#25C07A] disabled:opacity-50 transition-colors mt-2"
                     >
                         {loading ? 'Resetting...' : 'Reset password'}
                     </button>

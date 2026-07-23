@@ -12,12 +12,15 @@ api.interceptors.request.use((config) => {
     return config
 })
 
+const PUBLIC_AUTH_PATHS = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password', '/auth/refresh']
+
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const original = error.config
+        const isPublicAuthRequest = PUBLIC_AUTH_PATHS.some(path => original?.url?.includes(path))
 
-        if (error.response?.status === 401 && !original._retry) {
+        if (error.response?.status === 401 && !original._retry && !isPublicAuthRequest) {
             original._retry = true
 
             try {

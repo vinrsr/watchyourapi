@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { alertChannelsApi, userApi } from '@/lib/queries'
 import DashboardLayout from '@/components/DashboardLayout'
+import PasswordInput from '@/components/PasswordInput'
 
 export default function SettingsPage() {
     const queryClient = useQueryClient()
@@ -107,8 +108,7 @@ export default function SettingsPage() {
                         )}
                         <div>
                             <label className="block text-sm font-medium text-white/60 mb-1.5">Current password</label>
-                            <input
-                                type="password"
+                            <PasswordInput
                                 value={pwForm.currentPassword}
                                 onChange={e => setPwForm(f => ({ ...f, currentPassword: e.target.value }))}
                                 className={inputClass}
@@ -118,8 +118,7 @@ export default function SettingsPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1.5">New password</label>
-                                <input
-                                    type="password"
+                                <PasswordInput
                                     value={pwForm.newPassword}
                                     onChange={e => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
                                     className={inputClass}
@@ -129,8 +128,7 @@ export default function SettingsPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1.5">Confirm new password</label>
-                                <input
-                                    type="password"
+                                <PasswordInput
                                     value={pwForm.confirmPassword}
                                     onChange={e => setPwForm(f => ({ ...f, confirmPassword: e.target.value }))}
                                     className={inputClass}
@@ -142,7 +140,7 @@ export default function SettingsPage() {
                             <button
                                 onClick={handlePasswordSubmit}
                                 disabled={changePasswordMutation.isPending}
-                                className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
+                                className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
                             >
                                 {changePasswordMutation.isPending ? 'Updating...' : 'Update password'}
                             </button>
@@ -157,7 +155,7 @@ export default function SettingsPage() {
                         <h2 className="font-medium text-white">Alert channels</h2>
                         <button
                             onClick={() => setShowChannelForm(true)}
-                            className="px-3 py-1.5 bg-[#2EDB8F] text-white rounded-lg text-xs font-medium hover:bg-[#52E8A5] transition-colors"
+                            className="px-3 py-1.5 bg-[#2EDB8F] text-slate-900 rounded-lg text-xs font-medium hover:bg-[#52E8A5] transition-colors"
                         >
                             + Add channel
                         </button>
@@ -191,7 +189,7 @@ export default function SettingsPage() {
                                     <button
                                         onClick={() => createChannelMutation.mutate()}
                                         disabled={createChannelMutation.isPending}
-                                        className="px-4 py-2 bg-[#2EDB8F] text-white rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
+                                        className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] disabled:opacity-50 transition-colors"
                                     >
                                         {createChannelMutation.isPending ? 'Saving...' : 'Save'}
                                     </button>

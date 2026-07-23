@@ -5,9 +5,18 @@ import {
     updateMonitor,
     deleteMonitor,
 } from '../db/queries/monitors'
+import {
+    findEmailAlertChannelByAddress,
+    createAlertChannel,
+    attachAlertChannel,
+} from '../db/queries/alertChannels'
 
 export async function getMonitors(userId: string) {
-    return findMonitorsByUserId(userId)
+    const monitors = await findMonitorsByUserId(userId)
+    return monitors.map(({ monitorAlertChannels, ...monitor }) => ({
+        ...monitor,
+        hasAlertChannel: monitorAlertChannels.length > 0,
+    }))
 }
 
 export async function getMonitor(id: string, userId: string) {
@@ -21,12 +30,21 @@ export async function addMonitor(
     data: {
         name: string
         url: string
-        method: 'GET' | 'POST' | 'HEAD'
         intervalSeconds: number
         timeoutSeconds: number
+        email?: string
     }
 ) {
-    return createMonitor(userId, data)
+    const { email, ...monitorData } = data
+    const monitor = await createMonitor(userId, monitorData)
+
+    if (email) {
+        const channel = (await findEmailAlertChannelByAddress(userId, email))
+            || (await createAlertChannel(userId, { type: 'email', name: email, config: { email } }))
+        await attachAlertChannel(monitor.id, channel.id)
+    }
+
+    return monitor
 }
 
 export async function editMonitor(
@@ -35,7 +53,6 @@ export async function editMonitor(
     data: Partial<{
         name: string
         url: string
-        method: 'GET' | 'POST' | 'HEAD'
         intervalSeconds: number
         timeoutSeconds: number
     }>

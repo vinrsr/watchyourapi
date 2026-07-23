@@ -1,9 +1,19 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { db } from '../index'
 import { alertChannels, monitorAlertChannels } from '../schema'
 
 export async function findAlertChannelsByUserId(userId: string) {
     return db.select().from(alertChannels).where(eq(alertChannels.userId, userId))
+}
+
+export async function findEmailAlertChannelByAddress(userId: string, email: string) {
+    const result = await db.select().from(alertChannels)
+        .where(and(
+            eq(alertChannels.userId, userId),
+            eq(alertChannels.type, 'email'),
+            sql`${alertChannels.config}->>'email' = ${email}`
+        ))
+    return result[0] || null
 }
 
 export async function createAlertChannel(

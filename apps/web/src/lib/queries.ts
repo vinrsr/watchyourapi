@@ -19,9 +19,9 @@ export const monitorsApi = {
     create: (data: {
         name: string
         url: string
-        method: string
         intervalSeconds: number
         timeoutSeconds: number
+        email?: string
     }) => api.post('/monitors', data).then(r => r.data),
 
     update: (id: string, data: Partial<{

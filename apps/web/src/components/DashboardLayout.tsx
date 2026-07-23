@@ -57,7 +57,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-sm text-white/40">{user?.email}</span>
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                            <span className="w-2 h-2 rounded-full bg-[#2EDB8F] flex-shrink-0" />
+                            <span className="text-sm text-white/70" title="Signed in as">{user?.email}</span>
+                        </div>
                         <button
                             onClick={handleLogout}
                             className="text-sm text-white/50 hover:text-white transition-colors"

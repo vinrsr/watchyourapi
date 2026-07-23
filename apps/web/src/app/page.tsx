@@ -42,7 +42,7 @@ export default function LandingPage() {
                 <p className="text-white/50 mb-10 leading-relaxed max-w-xl mx-auto">
                     Add your endpoints, set an alert email, and get a dashboard with uptime history, response time trends, and a full incident log. Get an email the moment anything goes down.
                 </p>
-                <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
+                <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-slate-900 text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
                     Start monitoring for free
                 </Link>
             </section>
@@ -79,7 +79,7 @@ export default function LandingPage() {
                                     <span className="text-[10px] text-white/25">Incident</span>
                                 </div>
                             </div>
-                            <span className="text-[10px] text-white/25">Last 90 days</span>
+                            <span className="text-[10px] text-white/25">Uptime history</span>
                         </div>
                     </div>
 
@@ -212,7 +212,7 @@ export default function LandingPage() {
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-16 text-center">
                     <h2 className="text-2xl font-semibold text-white mb-3">Ready to monitor your APIs?</h2>
                     <p className="text-white/40 text-sm mb-8">Create an account and add your first monitor in under a minute.</p>
-                    <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-white text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
+                    <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-slate-900 text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
                         Get started free
                     </Link>
                 </div>
