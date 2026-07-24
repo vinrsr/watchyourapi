@@ -36,7 +36,7 @@ export default function IncidentsPage() {
 
                 {open.length > 0 && (
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-red-500/20">
-                        <div className="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+                        <div className="px-4 sm:px-6 py-4 border-b border-white/10 flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
                             <h2 className="font-medium text-white">Ongoing</h2>
                         </div>
@@ -49,11 +49,11 @@ export default function IncidentsPage() {
                 )}
 
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
-                    <div className="px-6 py-4 border-b border-white/10">
+                    <div className="px-4 sm:px-6 py-4 border-b border-white/10">
                         <h2 className="font-medium text-white">History</h2>
                     </div>
                     {resolved.length === 0 ? (
-                        <div className="px-6 py-8 text-center text-sm text-white/30">
+                        <div className="px-4 sm:px-6 py-8 text-center text-sm text-white/30">
                             No resolved incidents yet
                         </div>
                     ) : (
@@ -77,9 +77,9 @@ function IncidentRow({ incident }: { incident: any }) {
         : null
 
     return (
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4">
             <div className="min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                     <Link
                         href={`/monitors/${incident.monitor?.id ?? ''}`}
                         className="text-sm font-medium text-white hover:text-[#7DF0BC] transition-colors"
@@ -97,7 +97,7 @@ function IncidentRow({ incident }: { incident: any }) {
                     {new Date(incident.startedAt).toLocaleString()}
                 </p>
             </div>
-            <div className="text-right ml-4 flex-shrink-0">
+            <div className="text-right flex-shrink-0">
                 {incident.resolvedAt ? (
                     <>
                         <p className="text-xs text-emerald-400 font-medium">Resolved</p>

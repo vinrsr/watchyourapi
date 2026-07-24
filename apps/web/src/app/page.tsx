@@ -15,7 +15,7 @@ export default function LandingPage() {
             <div className="absolute top-1/2 right-[-100px] w-96 h-96 bg-[#2EDB8F]/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 left-[-50px] w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="absolute top-0 right-0 z-50 px-6 py-5 flex items-center gap-5">
+            <div className="absolute top-0 right-0 z-50 px-4 sm:px-6 py-5 flex items-center gap-3 sm:gap-5">
                 <Link href="/login" className="text-sm text-white/50 hover:text-white transition-colors">
                     Sign in
                 </Link>
@@ -24,22 +24,22 @@ export default function LandingPage() {
                 </Link>
             </div>
 
-            <section className="max-w-5xl mx-auto px-4 pt-20 pb-20 text-center relative z-10">
+            <section className="max-w-5xl mx-auto px-4 pt-24 sm:pt-20 pb-16 sm:pb-20 text-center relative z-10">
                 <Image
                     src="/logo.png"
                     alt="WatchYourAPI"
                     height={100}
                     width={100}
                     style={{ width: 'auto', height: '100px' }}
-                    className="mx-auto mb-6"
+                    className="mx-auto mb-6 h-16 sm:h-[100px]"
                 />
                 <span className="inline-block mb-5 px-3 py-1 rounded-full bg-white/5 text-[#7DF0BC] text-xs font-medium border border-white/10 backdrop-blur-sm">
                     API Monitoring
                 </span>
-                <h1 className="text-5xl font-bold text-white mb-5 leading-tight tracking-tight max-w-2xl mx-auto">
+                <h1 className="text-3xl sm:text-5xl font-bold text-white mb-5 leading-tight tracking-tight max-w-2xl mx-auto">
                     Know when your APIs go down before your users do
                 </h1>
-                <p className="text-white/50 mb-10 leading-relaxed max-w-xl mx-auto">
+                <p className="text-white/50 mb-10 leading-relaxed max-w-xl mx-auto text-sm sm:text-base">
                     Add your endpoints, set an alert email, and get a dashboard with uptime history, response time trends, and a full incident log. Get an email the moment anything goes down.
                 </p>
                 <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-slate-900 text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
@@ -52,7 +52,7 @@ export default function LandingPage() {
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">Features</p>
                     <h2 className="text-2xl font-semibold text-white">Everything you need to stay on top of your APIs</h2>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <div className="w-9 h-9 rounded-lg bg-emerald-400/10 flex items-center justify-center mb-4">
                             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,7 +167,7 @@ export default function LandingPage() {
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">How it works</p>
                     <h2 className="text-2xl font-semibold text-white">Designed to never miss a thing</h2>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                         { icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'text-amber-400', bg: 'bg-amber-400/10', value: '24/7', label: 'Monitors run continuously, no schedules, no gaps' },
                         { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-blue-400', bg: 'bg-blue-400/10', value: '<1 min', label: 'From a failed check to an alert in your inbox' },
@@ -193,7 +193,7 @@ export default function LandingPage() {
                     <p className="text-xs font-medium text-[#2EDB8F] uppercase tracking-widest mb-2">Get started</p>
                     <h2 className="text-2xl font-semibold text-white">Up and running in minutes</h2>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                         { n: '01', title: 'Add a monitor', desc: 'Enter your endpoint URL and choose a check interval. Monitoring starts immediately.' },
                         { n: '02', title: 'Set up alerts', desc: 'Add an email alert channel and attach it to any monitor. No missed incidents.' },
@@ -209,7 +209,7 @@ export default function LandingPage() {
             </section>
 
             <section className="max-w-5xl mx-auto px-4 pb-24 relative z-10">
-                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-16 text-center">
+                <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-16 text-center">
                     <h2 className="text-2xl font-semibold text-white mb-3">Ready to monitor your APIs?</h2>
                     <p className="text-white/40 text-sm mb-8">Create an account and add your first monitor in under a minute.</p>
                     <Link href="/register" className="inline-block px-6 py-2.5 bg-[#2EDB8F] text-slate-900 text-sm font-medium rounded-lg hover:bg-[#25C07A] transition-colors">
@@ -219,7 +219,7 @@ export default function LandingPage() {
             </section>
 
             <footer className="border-t border-white/10 relative z-10">
-                <div className="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between">
+                <div className="max-w-5xl mx-auto px-4 py-3 sm:h-12 sm:py-0 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-1 sm:gap-0 text-center">
                     <span className="text-sm text-white/20">WatchYourAPI</span>
                     <span className="text-xs text-white/20">API uptime monitoring</span>
                 </div>

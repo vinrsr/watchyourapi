@@ -42,7 +42,7 @@ export default function DashboardPage() {
                     <p className="text-white/40 text-sm mt-1">Your API monitoring at a glance</p>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
                         { label: 'Total monitors', value: total, color: 'text-white' },
                         { label: 'Operational', value: up, color: 'text-emerald-400' },
@@ -57,14 +57,14 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
-                    <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+                    <div className="px-4 sm:px-6 py-4 border-b border-white/10 flex items-center justify-between">
                         <h2 className="font-medium text-white">Monitors</h2>
-                        <Link href="/monitors" className="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-colors">
+                        <Link href="/monitors" className="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-colors flex-shrink-0">
                             View all
                         </Link>
                     </div>
                     {monitors.length === 0 ? (
-                        <div className="px-6 py-12 text-center">
+                        <div className="px-4 sm:px-6 py-12 text-center">
                             <p className="text-white/40 text-sm">No monitors yet</p>
                             <Link href="/monitors" className="mt-2 inline-block text-sm text-[#2EDB8F] hover:text-[#7DF0BC] transition-colors">
                                 Add your first monitor
@@ -76,11 +76,11 @@ export default function DashboardPage() {
                                 <Link
                                     key={monitor.id}
                                     href={`/monitors/${monitor.id}`}
-                                    className="flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-colors"
+                                    className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 hover:bg-white/5 transition-colors"
                                 >
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <p className="text-sm font-medium text-white">{monitor.name}</p>
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <p className="text-sm font-medium text-white truncate">{monitor.name}</p>
                                             {!monitor.hasAlertChannel && (
                                                 <span
                                                     title="No alert email attached — down alerts will fall back to your account email"
@@ -90,7 +90,7 @@ export default function DashboardPage() {
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-xs text-white/30 mt-0.5">{monitor.url}</p>
+                                        <p className="text-xs text-white/30 mt-0.5 truncate">{monitor.url}</p>
                                     </div>
                                     <StatusBadge status={monitor.status} />
                                 </Link>
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                 </div>
 
                 {userId && (
-                    <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 px-6 py-4 flex items-center justify-between">
+                    <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                             <p className="text-sm font-medium text-white">Your public status page</p>
                             <p className="text-xs text-white/30 mt-0.5">Share this link so others can check your API status</p>
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                         <Link
                             href={`/status/${userId}`}
                             target="_blank"
-                            className="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-colors flex-shrink-0 ml-4"
+                            className="px-3 py-1.5 rounded-lg border border-white/15 text-xs font-medium text-white/50 hover:text-white hover:bg-white/5 transition-colors flex-shrink-0 self-start sm:self-auto sm:ml-4"
                         >
                             View status page &#8599;
                         </Link>

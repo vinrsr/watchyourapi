@@ -97,10 +97,10 @@ export default function SettingsPage() {
 
                 {/* Password */}
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
-                    <div className="px-6 py-4 border-b border-white/10">
+                    <div className="px-4 sm:px-6 py-4 border-b border-white/10">
                         <h2 className="font-medium text-white">Change password</h2>
                     </div>
-                    <div className="px-6 py-5 space-y-4">
+                    <div className="px-4 sm:px-6 py-5 space-y-4">
                         {pwError && (
                             <div className="p-3 rounded-lg bg-red-500/10 border border-red-400/20 text-red-400 text-sm">
                                 {pwError}
@@ -115,7 +115,7 @@ export default function SettingsPage() {
                                 autoComplete="current-password"
                             />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-white/60 mb-1.5">New password</label>
                                 <PasswordInput
@@ -151,7 +151,7 @@ export default function SettingsPage() {
 
                 {/* Alert channels */}
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
-                    <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+                    <div className="px-4 sm:px-6 py-4 border-b border-white/10 flex items-center justify-between">
                         <h2 className="font-medium text-white">Alert channels</h2>
                         <button
                             onClick={() => setShowChannelForm(true)}
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                     </div>
 
                     {showChannelForm && (
-                        <div className="px-6 py-5 border-b border-white/10">
+                        <div className="px-4 sm:px-6 py-5 border-b border-white/10">
                             <div className="space-y-3">
                                 <div>
                                     <label className="block text-sm font-medium text-white/60 mb-1.5">Name</label>
@@ -206,7 +206,7 @@ export default function SettingsPage() {
 
                     <div className="divide-y divide-white/10">
                         {channels.length === 0 && !showChannelForm ? (
-                            <div className="px-6 py-8 text-center text-sm text-white/30">
+                            <div className="px-4 sm:px-6 py-8 text-center text-sm text-white/30">
                                 No alert channels yet
                             </div>
                         ) : (
@@ -217,12 +217,12 @@ export default function SettingsPage() {
                                 const isTestDisabled = testMutation.isPending || isCoolingDown
 
                                 return (
-                                    <div key={channel.id} className="flex items-center justify-between px-6 py-4">
-                                        <div>
-                                            <p className="text-sm font-medium text-white">{channel.name}</p>
-                                            <p className="text-xs text-white/30 mt-0.5">{channel.config.email}</p>
+                                    <div key={channel.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4">
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-medium text-white truncate">{channel.name}</p>
+                                            <p className="text-xs text-white/30 mt-0.5 truncate">{channel.config.email}</p>
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-2 flex-shrink-0">
                                             <button
                                                 onClick={() => handleSendTest(channel.id)}
                                                 disabled={isTestDisabled}

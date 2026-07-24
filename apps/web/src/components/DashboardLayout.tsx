@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth'
@@ -10,11 +10,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const router = useRouter()
     const pathname = usePathname()
     const { user, clearAuth } = useAuthStore()
+    const [menuOpen, setMenuOpen] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken')
         if (!token) router.push('/login')
     }, [router])
+
+    useEffect(() => {
+        setMenuOpen(false)
+    }, [pathname])
 
     async function handleLogout() {
         const refreshToken = localStorage.getItem('refreshToken') || ''
@@ -41,7 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <span className="font-semibold text-[#2EDB8F]">WatchYourAPI</span>
-                        <div className="flex items-center gap-1">
+                        <div className="hidden md:flex items-center gap-1">
                             {navItems.map(item => (
                                 <Link
                                     key={item.href}
@@ -56,7 +61,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             ))}
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-4">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
                             <span className="w-2 h-2 rounded-full bg-[#2EDB8F] flex-shrink-0" />
                             <span className="text-sm text-white/70" title="Signed in as">{user?.email}</span>
@@ -68,10 +73,57 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             Sign out
                         </button>
                     </div>
+                    <button
+                        onClick={() => setMenuOpen(o => !o)}
+                        className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+                        aria-label="Toggle menu"
+                        aria-expanded={menuOpen}
+                    >
+                        {menuOpen ? (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        )}
+                    </button>
                 </div>
+
+                {menuOpen && (
+                    <div className="md:hidden border-t border-white/10 px-4 py-3 space-y-3">
+                        <div className="flex flex-col gap-1">
+                            {navItems.map(item => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${pathname === item.href
+                                        ? 'bg-white/10 text-white font-medium'
+                                        : 'text-white/50 hover:text-white hover:bg-white/5'
+                                    }`}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 min-w-0">
+                                <span className="w-2 h-2 rounded-full bg-[#2EDB8F] flex-shrink-0" />
+                                <span className="text-sm text-white/70 truncate" title="Signed in as">{user?.email}</span>
+                            </div>
+                            <button
+                                onClick={handleLogout}
+                                className="text-sm text-white/50 hover:text-white transition-colors flex-shrink-0 ml-3"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </div>
+                )}
             </nav>
 
-            <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
+            <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8 relative z-10">
                 {children}
             </main>
         </div>

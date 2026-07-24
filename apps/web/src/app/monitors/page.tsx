@@ -88,14 +88,14 @@ export default function MonitorsPage() {
     return (
         <DashboardLayout>
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-semibold text-white">Monitors</h1>
                         <p className="text-white/40 text-sm mt-1">{monitors.length} monitors configured</p>
                     </div>
                     <button
                         onClick={() => setShowForm(true)}
-                        className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] transition-colors"
+                        className="px-4 py-2 bg-[#2EDB8F] text-slate-900 rounded-lg text-sm font-medium hover:bg-[#52E8A5] transition-colors self-start sm:self-auto"
                     >
                         Add monitor
                     </button>
@@ -105,7 +105,7 @@ export default function MonitorsPage() {
                     <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
                         <h2 className="font-medium text-white mb-4">New monitor</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-white/60 mb-1.5">Name</label>
                                     <input
@@ -213,15 +213,15 @@ export default function MonitorsPage() {
 
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 divide-y divide-white/10">
                     {monitors.length === 0 ? (
-                        <div className="px-6 py-12 text-center">
+                        <div className="px-4 sm:px-6 py-12 text-center">
                             <p className="text-white/40 text-sm">No monitors yet. Add one to get started.</p>
                         </div>
                     ) : (
                         monitors.map((monitor: any) => (
-                            <div key={monitor.id} className="px-6 py-4">
+                            <div key={monitor.id} className="px-4 sm:px-6 py-4">
                                 {editingId === monitor.id ? (
                                     <div className="space-y-3">
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <div>
                                                 <label className="block text-xs font-medium text-white/50 mb-1">Name</label>
                                                 <input
@@ -270,9 +270,9 @@ export default function MonitorsPage() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <Link href={`/monitors/${monitor.id}`} className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 flex-wrap">
                                                 <p className="text-sm font-medium text-white">{monitor.name}</p>
                                                 {!monitor.hasAlertChannel && (
                                                     <span
@@ -286,7 +286,7 @@ export default function MonitorsPage() {
                                             <p className="text-xs text-white/30 mt-0.5 truncate">{monitor.url}</p>
                                             <p className="text-xs text-white/25 mt-0.5">Every {monitor.intervalSeconds}s</p>
                                         </Link>
-                                        <div className="flex items-center gap-2 ml-4">
+                                        <div className="flex items-center gap-2 flex-wrap sm:ml-4">
                                             <StatusBadge status={monitor.status} />
                                             <button
                                                 onClick={() => {
